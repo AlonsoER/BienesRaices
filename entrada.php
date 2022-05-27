@@ -1,5 +1,7 @@
 <?php 
     require 'includes/funciones.php';
+
+    
     incluirTemplate('header');
 ?>
 
@@ -25,4 +27,4 @@
         </div>
     </main>
 
-    <?php incluirTemplate('header');?>
+    <?php incluirTemplate('footer');?>
