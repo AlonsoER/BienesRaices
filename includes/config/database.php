@@ -7,6 +7,6 @@ function conectarDB() : mysqli{
         echo "Error, no se pudo conectar :'(";
         exit;
     }
-
+    mysqli_set_charset($db, 'utf8');
     return $db;
 }

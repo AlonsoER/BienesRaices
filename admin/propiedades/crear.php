@@ -3,6 +3,10 @@
     require '../../includes/config/database.php';
     $db = conectarDB();
 
+    // Consultar vendedores
+    $consulta = "SELECT * FROM vendedores";
+    $resultado = mysqli_query($db, $consulta);
+
     // Arreglo errores
     $errores = [];
 
@@ -13,19 +17,20 @@
     $wc = '';
     $estacionamiento = '';
     $vendedorId = '';
+    $creado = date('Y/m/d');
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         // echo "<pre>";
         // var_dump($_POST);
         // echo "</pre>";
 
-        $titulo = $_POST['titulo'];
-        $precio = $_POST['precio'];
-        $descipcion = $_POST['descripcion'];
-        $habitaciones = $_POST['habitaciones'];
-        $wc = $_POST['wc'];
-        $estacionamiento = $_POST['estacionamiento'];
-        $vendedorId = $_POST['vendedor'];
+        $titulo = mysqli_real_escape_string($db, $_POST['titulo']);
+        $precio = mysqli_real_escape_string($db, $_POST['precio']);
+        $descipcion = mysqli_real_escape_string($db, $_POST['descripcion']);
+        $habitaciones = mysqli_real_escape_string($db, $_POST['habitaciones']);
+        $wc = mysqli_real_escape_string($db, $_POST['wc']);
+        $estacionamiento = mysqli_real_escape_string($db, $_POST['estacionamiento']);
+        $vendedorId = mysqli_real_escape_string($db, $_POST['vendedor']);
 
         if(!$titulo){
             $errores[] = "Debes agregar un titulo";
@@ -51,13 +56,13 @@
 
         // Validar que le array de errores este vacio
         if(empty($errores)){
-            $query = "INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, vendedorId)
-            VALUES ( '$titulo', '$precio', '$descipcion', '$habitaciones', '$wc', '$estacionamiento', '$vendedorId' );";
+            $query = "INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId)
+            VALUES ( '$titulo', '$precio', '$descipcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId' );";
 
             // echo $query;
             $resultado = mysqli_query($db, $query);
             if($resultado){
-            echo 'Propiedad creada exitosamente';
+                header('Location: /admin');
             }
         }
     }
@@ -111,7 +116,9 @@
             <legend>Vendedor</legend>
 
             <select name="vendedor" id="">
-                <option value="1">Alonso</option>
+                <?php while( $row = mysqli_fetch_assoc($resultado) ) : ?>
+                    <option <?php echo $vendedorId === $row['id'] ? 'selected' : ''; ?> value="<?php echo $row['id']; ?>"><?php echo $row['nombre'] . " " . $row['apellidos']; ?></option>
+                <?php endwhile; ?>
             </select>
         </fieldset>
 
