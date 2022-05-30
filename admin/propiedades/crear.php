@@ -32,6 +32,9 @@
         $estacionamiento = mysqli_real_escape_string($db, $_POST['estacionamiento']);
         $vendedorId = mysqli_real_escape_string($db, $_POST['vendedor']);
 
+        // Asignar files hacia una variable
+        $imagen = $_FILES['']
+
         if(!$titulo){
             $errores[] = "Debes agregar un titulo";
         }
@@ -52,6 +55,9 @@
         }
         if(!$vendedorId){
             $errores[] = "El vendedor es obligatorio";
+        }
+        if(!$imagen['name'] || $imagen['error']){
+            $errores[] = "La imagen es obligatoria";
         }
 
         // Validar que le array de errores este vacio
@@ -82,7 +88,7 @@
         </div>
     <?php endforeach; ?>
 
-    <form class="formulario" method="POST" action="/admin/propiedades/crear.php">
+    <form class="formulario" method="POST" action="/admin/propiedades/crear.php" enctype="multipart/form-data">
         <fieldset>
             <legend>Información Géneral</legend>
 
@@ -93,7 +99,7 @@
             <input type="number" id="precio" name="precio" placeholder="Precio Propiedad" value="<?php echo $precio; ?>">
 
             <label for="imagen">Imagen: </label>
-            <input type="file" id="imagen" accept="image/jpeg, image/png">
+            <input type="file" id="imagen" accept="image/jpeg, image/png" name="imagen">
 
             <label for="descripcion">Descripción: </label>
             <textarea id="descripcion" name="descripcion" value="<?php echo $descipcion; ?>"></textarea>
