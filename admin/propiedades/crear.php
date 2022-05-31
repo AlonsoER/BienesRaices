@@ -20,9 +20,13 @@
     $creado = date('Y/m/d');
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        // echo "<pre>";
-        // var_dump($_POST);
-        // echo "</pre>";
+        echo "<pre>";
+        var_dump($_POST);
+        echo "</pre>";
+
+        echo "<pre>";
+        var_dump($_FILES);
+        echo "</pre>";
 
         $titulo = mysqli_real_escape_string($db, $_POST['titulo']);
         $precio = mysqli_real_escape_string($db, $_POST['precio']);
@@ -33,7 +37,9 @@
         $vendedorId = mysqli_real_escape_string($db, $_POST['vendedor']);
 
         // Asignar files hacia una variable
-        $imagen = $_FILES['']
+        $imagen = $_FILES['imagen'];
+        var_dump($imagen);
+        
 
         if(!$titulo){
             $errores[] = "Debes agregar un titulo";
@@ -60,15 +66,34 @@
             $errores[] = "La imagen es obligatoria";
         }
 
+        $medida = 1000 * 1000;
+        if($imagen['size'] > $medida){
+            $errores[] = "La imagen es muy pesada";
+        }
+
         // Validar que le array de errores este vacio
         if(empty($errores)){
-            $query = "INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId)
-            VALUES ( '$titulo', '$precio', '$descipcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId' );";
+            // Subida de archivos
+
+            // Crear carpeta
+            $carpetaImagenes = '../../imagenes/';
+            if(!is_dir($carpetaImagenes)){
+                mkdir($carpetaImagenes);
+            }
+
+            // Generar un nombre unico
+            $nombreImagen = md5( uniqid( rand(), true));
+
+            // Subir la imagen
+            move_uploaded_file($imagen['tmp_name'], $carpetaImagenes .  $nombreImagen . ".jpg");
+
+            $query = "INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId)
+            VALUES ( '$titulo', '$precio', '$nombreImagen', '$descipcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId' );";
 
             // echo $query;
             $resultado = mysqli_query($db, $query);
             if($resultado){
-                header('Location: /admin');
+                header('Location: /admin?resultado=1');
             }
         }
     }
