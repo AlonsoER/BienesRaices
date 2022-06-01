@@ -23,7 +23,7 @@
             <p>Consequuntur quis impedit magnam inventore, expedita tempora distinctio, assumenda in?adipisicing
             elit. Obcaecati adipisci excepturi quisquam 
             recusandae! Nemo quam similique praesentium doloremque quia corrupti consequuntur quis impedit 
-            magnam inventore, expedita tempora distinctio, assumenda in</p>
+            magnam inventore expedita tempora distinctio, assumenda in</p>
         </div>
     </main>
 
