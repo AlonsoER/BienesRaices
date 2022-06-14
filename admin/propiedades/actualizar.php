@@ -88,18 +88,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Subida de archivos
 
         // Crear carpeta
-        // $carpetaImagenes = '../../imagenes/';
-        // if (!is_dir($carpetaImagenes)) {
-        //     mkdir($carpetaImagenes);
-        // }
+        $carpetaImagenes = '../../imagenes/';
+        if (!is_dir($carpetaImagenes)) {
+            mkdir($carpetaImagenes);
+        }
 
-        // // Generar un nombre unico
-        // $nombreImagen = md5(uniqid(rand(), true));
+        $nombreImagen = "";
 
-        // // Subir la imagen
-        // move_uploaded_file($imagen['tmp_name'], $carpetaImagenes .  $nombreImagen . ".jpg");
+        if ($imagen['name']){
+            // Eliminar la imagen previa
+            unlink($carpetaImagenes.'/'.$propiedad['imagen'].'.jpg');
 
-        $query = " UPDATE propiedades SET titulo = '${titulo}', precio = '${precio}', descripcion = '${descripcion}', habitaciones = 
+            // // Generar un nombre unico
+            $nombreImagen = md5(uniqid(rand(), true));
+
+            // // Subir la imagen
+            move_uploaded_file($imagen['tmp_name'], $carpetaImagenes .  $nombreImagen . ".jpg");
+        }else{
+            $nombreImagen = $propiedad['imagen'];
+        }
+
+        
+
+        $query = " UPDATE propiedades SET titulo = '${titulo}', precio = '${precio}', imagen = '${nombreImagen}', descripcion = '${descripcion}', habitaciones = 
         ${habitaciones}, wc = ${wc}, estacionamiento = ${estacionamiento}, vendedorId = ${vendedorId} WHERE id = ${id} ";
         // echo $query;
 
